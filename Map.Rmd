@@ -1,0 +1,40 @@
+---
+title: "Map website"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, include=FALSE}
+library(leaflet)
+library(htmltools)
+data <- read.csv(file = "cities15000.csv", header = TRUE, sep = ",")
+colnames(data)
+```
+This map shows population of cities around the world.
+
+```{r}
+table_data <- data.frame(Name =data$asciiname,
+                     Country = data$country.code,
+                     Latitude = data$latitude,
+                     Longitude = data$longitude,
+                     Population = data$population
+                     )
+
+map <- table_data %>%
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers(popup=paste
+             ("<br>Country: ", 
+               htmlEscape(table_data$Country), 
+              "<br>Name: ", 
+               htmlEscape(table_data$Name), 
+              "<br>Population: ", 
+               htmlEscape(table_data$Population)
+              ) 
+            )
+map
+```
